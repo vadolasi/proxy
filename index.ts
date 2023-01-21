@@ -18,7 +18,8 @@ app.all("/", (req, res, next) => {
   const proxy = createProxyMiddleware({
     target: target.href,
     followRedirects: true,
-    changeOrigin: true
+    changeOrigin: true,
+    ws: true
   })
 
   proxy(req, res, next)
