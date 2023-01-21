@@ -11,7 +11,7 @@ app.use("/", (req, res, next) => {
   })
 
   createProxyMiddleware({
-    target: req.query.url as string,
+    target: new URL(req.query.url as string).href,
     changeOrigin: true,
     pathRewrite: {
       [`^/`]: ""
