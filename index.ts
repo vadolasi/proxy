@@ -10,9 +10,10 @@ app.all("/", (req, res, next) => {
     }
   })
 
-  const target =  new URL(req.query.url as string).href
+  const target = new URL(req.query.url as string)
 
-  req.url = req.url.split("?")[0]
+  req.url = target.pathname + target.search
+  req.query = Object.fromEntries(target.searchParams.entries())
 
   const proxy = createProxyMiddleware({
     target,
