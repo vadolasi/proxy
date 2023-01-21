@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "nodemon index.ts",
     "start": "vercel dev",
+    "build": "tsc",
     "deploy": "tsc && vercel deploy --prod"
   },
   "keywords": [],
