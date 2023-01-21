@@ -12,6 +12,8 @@ app.use("/", (req, res, next) => {
 
   const target =  new URL(req.query.url as string).href
 
+  req.url = req.url.split("?")[0]
+
   const proxy = createProxyMiddleware({
     target,
     changeOrigin: true,
