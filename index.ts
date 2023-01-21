@@ -12,9 +12,10 @@ app.all("/", (req, res, next) => {
 
   const target = new URL(req.query.url as string)
 
-  req.url = target.pathname + target.searchParams.toString()
-  if (req.headers["opt-join-query"] === "true") {
-    delete req.headers["opt-join-query"]
+
+
+  if (req.query["opt-join-query"] === "true") {
+    delete req.query["opt-join-query"]
     delete req.query.url
     Object.keys(req.query).forEach(key => {
       if (key.startsWith("h-")) {
@@ -25,6 +26,7 @@ app.all("/", (req, res, next) => {
   } else {
     req.query = Object.fromEntries(target.searchParams.entries())
   }
+  req.url = target.pathname + new URLSearchParams(req.query as any).toString()
 
   const proxy = createProxyMiddleware({
     target: target.href,
@@ -36,4 +38,6 @@ app.all("/", (req, res, next) => {
   proxy(req, res, next)
 })
 
-export default app
+app.listen(8000, () => {
+  console.log("Server listening on port 8000")
+})
