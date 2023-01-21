@@ -1,9 +1,11 @@
 import express from "express"
-import { createProxyMiddleware } from "http-proxy-middleware"
+import httpProxy from "http-proxy"
+
+const proxy = httpProxy.createProxyServer({})
 
 const app = express()
 
-app.use("/", (req, res, next) => {
+app.all("/", (req, res) => {
   Object.keys(req.query).forEach(key => {
     if (key.startsWith("h-")) {
       res.setHeader(key.replace("h-", ""), req.query[key] as string)
@@ -14,22 +16,7 @@ app.use("/", (req, res, next) => {
 
   req.url = req.url.split("?")[0]
 
-  const proxy = createProxyMiddleware({
-    target,
-    changeOrigin: true,
-    logLevel: "debug",
-    onProxyReq: (proxyReq, req, res) => {
-      console.log("onProxyReq", req.url)
-    },
-    onProxyRes: (proxyRes, req, res) => {
-      console.log("onProxyRes", req.url)
-    },
-    onError: (err, req, res) => {
-      console.log("onError", req.url)
-    }
-  })
-
-  proxy(req, res, next)
+  proxy.web(req, res, { target })
 })
 
 export default app
