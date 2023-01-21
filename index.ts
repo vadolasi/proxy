@@ -12,14 +12,13 @@ app.all("/", (req, res, next) => {
 
   const target = new URL(req.query.url as string)
 
-  req.url = target.pathname + target.search
+  req.url = target.pathname + target.searchParams.toString()
   req.query = Object.fromEntries(target.searchParams.entries())
 
   const proxy = createProxyMiddleware({
-    target,
+    target: target.href,
     followRedirects: true,
-    changeOrigin: true,
-    logLevel: "debug"
+    changeOrigin: true
   })
 
   proxy(req, res, next)
