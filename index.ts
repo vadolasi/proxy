@@ -10,13 +10,24 @@ app.use("/", (req, res, next) => {
     }
   })
 
-  createProxyMiddleware({
-    target: new URL(req.query.url as string).href,
+  const target =  new URL(req.query.url as string).href
+
+  const proxy = createProxyMiddleware({
+    target,
     changeOrigin: true,
-    pathRewrite: {
-      [`^/`]: ""
+    logLevel: "debug",
+    onProxyReq: (proxyReq, req, res) => {
+      console.log("onProxyReq", req.url)
+    },
+    onProxyRes: (proxyRes, req, res) => {
+      console.log("onProxyRes", req.url)
+    },
+    onError: (err, req, res) => {
+      console.log("onError", req.url)
     }
-  })(req, res, next)
+  })
+
+  proxy(req, res, next)
 })
 
 export default app
