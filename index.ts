@@ -13,7 +13,18 @@ app.all("/", (req, res, next) => {
   const target = new URL(req.query.url as string)
 
   req.url = target.pathname + target.searchParams.toString()
-  req.query = Object.fromEntries(target.searchParams.entries())
+  if (req.headers["opt-join-query"] === "true") {
+    delete req.headers["opt-join-query"]
+    delete req.query.url
+    Object.keys(req.query).forEach(key => {
+      if (key.startsWith("h-")) {
+        delete req.query[key]
+      }
+    })
+    req.query = { ...Object.fromEntries(target.searchParams.entries()), ...req.query }
+  } else {
+    req.query = Object.fromEntries(target.searchParams.entries())
+  }
 
   const proxy = createProxyMiddleware({
     target: target.href,
