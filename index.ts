@@ -16,6 +16,7 @@ app.all("/", (req, res, next) => {
 
   const proxy = createProxyMiddleware({
     target,
+    followRedirects: true,
     changeOrigin: true,
     logLevel: "debug"
   })
@@ -23,4 +24,6 @@ app.all("/", (req, res, next) => {
   proxy(req, res, next)
 })
 
-export default app
+app.listen(8000, () => {
+  console.log("listening on port 8000")
+})
