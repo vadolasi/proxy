@@ -19,6 +19,4 @@ app.use("/", (req, res, next) => {
   })(req, res, next)
 })
 
-app.listen(8000, () => {
-  console.log("Server started on port 8000")
-})
+export default app
