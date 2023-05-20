@@ -12,8 +12,6 @@ app.all("/", (req, res, next) => {
 
   const target = new URL(req.query.url as string)
 
-
-
   if (req.query["opt-join-query"] === "true") {
     delete req.query["opt-join-query"]
     delete req.query.url
@@ -32,6 +30,7 @@ app.all("/", (req, res, next) => {
     target: target.href,
     followRedirects: true,
     changeOrigin: true,
+    cookieDomainRewrite: target.hostname,
     ws: true
   })
 
